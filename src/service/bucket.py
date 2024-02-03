@@ -1,16 +1,16 @@
-import os
+#import os
 import uuid
 import boto3
 import typing
 
-#if typing.TYPE_CHECKING:
-from mypy_boto3_s3 import S3Client
+if typing.TYPE_CHECKING:
+    from mypy_boto3_s3 import S3Client
 
-endpoint_url = None
+# endpoint_url = None
 # if os.getenv("STAGE") == "local":
 #     endpoint_url = "https://localhost.localstack.cloud:4566"
 
-#s3: "S3Client" = boto3.client("s3", endpoint_url=endpoint_url)
+# s3: "S3Client" = boto3.client("s3", endpoint_url=endpoint_url)
 s3: "S3Client" = boto3.client("s3")
 
 def download_file(bucket_name, key):

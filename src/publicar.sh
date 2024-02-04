@@ -8,4 +8,4 @@ zip lambda.zip service/*
 rm package -r
 mv lambda.zip ../infra/lambda_convert/
 cd ../infra/
-tflocal apply -auto-approve
+tflocal apply --auto-approve

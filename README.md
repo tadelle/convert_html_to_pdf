@@ -44,49 +44,34 @@ cd ../localstack/
 docker compose up -d
 ```
 
-## Publicando
-
-### 7 - Prepare o pacote da lambda para ser publicado
-Devemos compactar todo o conteúdo da pasta site-packages, que contém as bibliotecas usadas pela lambda function.
-Procure a pasta site-packages na pasta do seu ambiente virtual.
-
-venv/lib/python3.11/site-packages
-ou
-venv/Lib/site-packages
-
-Podemos usar qualquer método para produzir o arquivo zip, mas o importante é que o arquivo main.py, assim como a pasta service. As pastas da biblioteca ficam no mesmo nĩvel que o arquivo main. Como mostrado na imagem abaixo.
-
-![Estrutura do arquivo zip](lambda_zip.png)
-
-### 8 - Monte o arquivo .zip a ser usado para publicação da lambda
-```shell
-cd ../src/venv/lib/python3.11/site-packages
-zip lambda.zip *
-mv lambda.zip ../../../../
-cd ../../../../
-zip lambda.zip main.py
-zip lambda.zip service/*
-mv lambda.zip ../infra/lambda_convert
-```
-
-### 9 - Inicie o Terraform
+### 7 - Inicie o Terraform
 ```shell
 cd ../infra
 tflocal init
 ```
 
-### 8 - Verifique o planejamento do terraform
+## Publicando
+
+### 8 - Prepare o pacote da lambda para ser publicado
+Para preparar o pacote devemos montar todas as dependências da nossa lambda. Podemos fazer isso usando o comando abaixo, estando na pasta /src/.
+
+pip3 install -r requirements.txt -t package --upgrade
+
+As dependências serão montadas na pasta package. Devemos compactar todo o conteúdo dessa pasta incluindo o nosso código fonte usando o formato zip.
+
+Podemos usar qualquer método para produzir o arquivo zip, mas o importante é que o arquivo main.py, assim como a pasta service estejam na raiz. As pastas da biblioteca ficam no mesmo nível que o arquivo main. Como mostrado na imagem abaixo.
+
+![Estrutura do arquivo zip](lambda_zip.png)
+
+Para facilitar montei o arquivo publica.sh que faz tudo que foi informado acima e ainda faz a publicação e apaga a pasta com as dependências, pois não precisaremos mais dela.
+
+### 8.1 - Monte o arquivo .zip a ser usado para publicação da lambda
 ```shell
-tflocal plan
+cd ../src
+./publicar.sh
 ```
 
-### 9 - Aplique as mudanças
-```shell
-tflocal apply --auto-approve
-```
-
-
-### 10 - Verifique se o bucket e a lambda foram criados corretamente
+### 9 - Verifique se o bucket e a lambda foram criados corretamente
 ```shell
 aws s3 ls --endpoint-url=http://localhost:4566
 ```
@@ -123,10 +108,18 @@ Verifique que até o momento o bucket está vazio
 aws s3 ls my-bucket-test --endpoint-url=http://localhost:4566
 ```
 
-### 11 - Fazendo upload do arquivo html para o bucket e verificando em seguida
+### 10 - Fazendo upload do arquivo html para o bucket e verificando em seguida
 ```shell
-aws s3 cp exemplo.html s3://my-bucket-test/html --endpoint-url=http://localhost:4566
+aws s3 cp exemplo.html s3://my-bucket-test/html/ --endpoint-url=http://localhost:4566
 aws s3 ls my-bucket-test --endpoint-url=http://localhost:4566
 ```
 
-
+### 11 - Verificando o bucket
+Se tudo deu certo você verá dois prefixos (como se fossem pastas): html e pdf.
+```shell
+aws s3 ls my-bucket-test --endpoint-url=http://localhost:4566
+```
+### 12 - Vamos fazer download do arquivo pdf gerado.
+```shell
+awslocal s3 cp s3://my-bucket-test/pdf/exemplo.pdf exemplo.pdf
+```

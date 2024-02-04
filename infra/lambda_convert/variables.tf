@@ -15,7 +15,7 @@ variable "handler_name" {
 
 variable "memory_size" {
   description = "Amount of memory in MB your Lambda Function can use at runtime."
-  default     = "128"
+  default     = "256"
 }
 
 variable "runtime" {
@@ -24,7 +24,7 @@ variable "runtime" {
 }
 
 variable "timeout" {
-  description = "The amount of time your Lambda Function has to run in seconds. Defaults to 5 minutes"
+  description = "The amount of time your Lambda Function has to run in seconds. Defaults to 1 minute"
   default     = "60"
 }
 

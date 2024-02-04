@@ -166,4 +166,5 @@ override.tf.json
 .terraformrc
 terraform.rc
 
-**/volume/*
+*.zip
+package

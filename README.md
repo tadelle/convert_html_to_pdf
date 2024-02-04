@@ -23,9 +23,16 @@ cd src
 python -m venv venv
 ```
 
-### 3 - Ative o ambiente virtual (Linux)
+### 3 - Ative o ambiente virtual
+
+Linux
 ```shell
 source venv/bin/activate
+```
+
+Windows - Powershell
+```shell
+& .\venv\Scripts\activate
 ```
 
 ### 4 - Instale a dependências
@@ -63,12 +70,22 @@ Podemos usar qualquer método para produzir o arquivo zip, mas o importante é q
 
 ![Estrutura do arquivo zip](lambda_zip.png)
 
-Para facilitar montei o arquivo publica.sh que faz tudo que foi informado acima e ainda faz a publicação e apaga a pasta com as dependências, pois não precisaremos mais dela.
+Para facilitar montei os arquivos de script publicar.sh e publicar.ps1 que fazem tudo que foi informado acima e ainda faz a publicação e apaga a pasta com as dependências, pois não precisaremos mais dela.
 
-### 8.1 - Monte o arquivo .zip a ser usado para publicação da lambda
+No caso do Windows é um pouco mais complicado, pois como a aplicação é executada em uma imagem Linux, precisamos instalar algumas bibliotecas da plataforma Linux. Você pode ver isso no arquivo publicar.ps1 na segunda e terceira linha.
+
+### 8.1 - Monte o arquivo .zip e realize a publicação
+
+Linux
 ```shell
 cd ../src
 ./publicar.sh
+```
+
+Windows - Powershell
+```shell
+cd ..\src
+.\publicar.ps1
 ```
 
 ### 9 - Verifique se o bucket e a lambda foram criados corretamente
@@ -108,10 +125,9 @@ Verifique que até o momento o bucket está vazio
 aws s3 ls my-bucket-test --endpoint-url=http://localhost:4566
 ```
 
-### 10 - Fazendo upload do arquivo html para o bucket e verificando em seguida
+### 10 - Fazendo upload do arquivo html para o bucket
 ```shell
 aws s3 cp exemplo.html s3://my-bucket-test/html/ --endpoint-url=http://localhost:4566
-aws s3 ls my-bucket-test --endpoint-url=http://localhost:4566
 ```
 
 ### 11 - Verificando o bucket
@@ -119,7 +135,12 @@ Se tudo deu certo você verá dois prefixos (como se fossem pastas): html e pdf.
 ```shell
 aws s3 ls my-bucket-test --endpoint-url=http://localhost:4566
 ```
+```
+                   PRE html/
+                   PRE pdf/
+```
+
 ### 12 - Vamos fazer download do arquivo pdf gerado.
 ```shell
-awslocal s3 cp s3://my-bucket-test/pdf/exemplo.pdf exemplo.pdf
+aws s3 cp s3://my-bucket-test/pdf/exemplo.pdf exemplo.pdf --endpoint-url=http://localhost:4566
 ```

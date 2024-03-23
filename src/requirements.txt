@@ -1,4 +1,4 @@
 boto3==1.34.34
 mypy_boto3_s3==1.34.14
 cryptography==3.4.8
-xhtml2pdf==0.2.14
+xhtml2pdf==0.2.15

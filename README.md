@@ -76,7 +76,7 @@ No caso do Windows é um pouco mais complicado, pois como a aplicação é execu
 
 ### 8.1 - Monte o arquivo .zip e realize a publicação
 
-Linux
+Linux (é necessário ter o zip instalado)
 ```shell
 cd ../src
 ./publicar.sh
